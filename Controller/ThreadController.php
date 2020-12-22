@@ -12,6 +12,7 @@
 namespace FOS\CommentBundle\Controller;
 
 use App\Entity\Advertisement;
+use App\Entity\Company;
 use FOS\CommentBundle\Model\CommentInterface;
 use FOS\CommentBundle\Model\ThreadInterface;
 use FOS\RestBundle\View\View;
@@ -439,6 +440,19 @@ class ThreadController extends AbstractController
 
                 if ($product) {
                     $idProductAuthor = $product->getUser()->getId();
+                }else{
+                    $idProductAuthor = 0;
+                }
+            }
+
+            if (stripos($comments[0]['comment']->getThread()->getId(), 'company') !== false) {
+                $idProduct = ltrim($comments[0]['comment']->getThread()->getId(), 'company');
+                $product = $this->getDoctrine()->getRepository(Company::class)->find($idProduct);
+
+                if ($product) {
+                    $idProductAuthor = $product->getUsers()->first()->getId();
+                }else{
+                    $idProductAuthor = 0;
                 }
             }
         }else{
